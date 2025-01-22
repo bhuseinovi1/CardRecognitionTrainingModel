@@ -2,3 +2,4 @@ crab/
 __pycache__/
 *.pyc
 *.pyo
+datasets/
