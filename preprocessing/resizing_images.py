@@ -16,6 +16,7 @@ def resize_image(input_path, datasets_file_path, target_size):
         new_image = Image.new("RGB", target_size)  # Create a new image with the target size
         new_image.paste(image, ((target_size[0] - image.width) // 2, (target_size[1] - image.height) // 2))  # Center the resized image
         new_image.save(datasets_file_path)
+        print(f"Image {input_path} copied to {datasets_file_path}!")
     except Exception as e:
         print(f"Error resizing image {input_path}: {e}")
 
