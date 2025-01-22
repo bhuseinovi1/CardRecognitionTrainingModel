@@ -21,6 +21,12 @@ def separate_datasets(datasets_directory, datasets_range, train_ratio=0.70, vali
     
     categories = ['training', 'validation', 'testing']
 
+    # Create subdirectories for the datasets
+    for category in categories:
+        category_folder_path = os.path.join(datasets_directory, category)
+        os.makedirs(category_folder_path, exist_ok=True)
+        print(f"Created folder: {category_folder_path}")
+
     for folder_num in datasets_range:
         folder_name = str(folder_num)
         folder_path = os.path.join(datasets_directory, folder_name)
@@ -43,12 +49,6 @@ def separate_datasets(datasets_directory, datasets_range, train_ratio=0.70, vali
         validation_count = int(total_files * validation_ratio)
         testing_count = total_files - train_count - validation_count
 
-        # Create subdirectories for the datasets
-        for category in categories:
-            category_folder_path = os.path.join(folder_path, category)
-            os.makedirs(category_folder_path, exist_ok=True)
-            print(f"Created folder: {category_folder_path}")
-
         # Split files into datasets
         train_files = all_files[:train_count]
         validation_files = all_files[train_count:train_count + validation_count]
@@ -58,7 +58,9 @@ def separate_datasets(datasets_directory, datasets_range, train_ratio=0.70, vali
         def move_files(file_list, destination_category):
             for file_name in file_list:
                 source_path = os.path.join(folder_path, file_name)
-                destination_path = os.path.join(folder_path, destination_category, file_name)
+                destination_path = os.path.join(datasets_directory, destination_category, folder_name)
+                os.makedirs(destination_path, exist_ok=True)
+                destination_path = os.path.join(destination_path, file_name)
                 try:
                     shutil.move(source_path, destination_path)
                     print(f"Moved: {file_name} -> {destination_category}")
@@ -69,5 +71,10 @@ def separate_datasets(datasets_directory, datasets_range, train_ratio=0.70, vali
         move_files(train_files, 'training')
         move_files(validation_files, 'validation')
         move_files(testing_files, 'testing')
+        try: 
+            os.rmdir(folder_path)
+            print(f"Deleted folder: {folder_path}")
+        except Exception as e:
+            print(f"Error deleting folder {folder_path}: {e}")
 
     print("Dataset separation completed successfully!")
