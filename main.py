@@ -15,7 +15,7 @@ def main():
 
     # Train the model
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    history = model.fit(train_generator, epochs=5, validation_data=validation_generator)
+    history = model.fit(train_generator, epochs=10, validation_data=validation_generator)
 
     # Evaluate the model
     loss, accuracy = model.evaluate(test_generator)    

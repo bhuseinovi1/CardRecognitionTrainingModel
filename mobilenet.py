@@ -1,4 +1,4 @@
-# from keras._tf_keras.keras.applications.mobilenet_v3 import MobileNetV3Small
+# from keras._tf_keras.keras.applications.mobilenet_v3 import MobileNetV3
 from keras._tf_keras.keras.applications.mobilenet_v2 import MobileNetV2
 from keras import layers, models
 
@@ -12,8 +12,8 @@ def create_model(num_classes):
     model = models.Sequential([
         base_model,
         layers.GlobalAveragePooling2D(),
-        layers.Dropout(0.1),
-        layers.Dense(128, activation='relu'),
+        layers.Dropout(0.2),
+        layers.Dense(256, activation='relu'),
         layers.Dense(num_classes, activation='softmax')
     ])
     
