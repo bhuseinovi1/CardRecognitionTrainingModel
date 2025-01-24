@@ -12,6 +12,15 @@ def main():
     # Load MobileNetV3Small model
     model = create_model(num_classes) # 79 classes
     model.summary()
-    
+
+    # Train the model
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    history = model.fit(train_generator, epochs=5, validation_data=validation_generator)
+
+    # Evaluate the model
+    loss, accuracy = model.evaluate(test_generator)    
+    print(f"Test accuracy: {accuracy * 100:.2f}%")
+    print(f"Test loss: {loss:.4f}")
+
 if __name__ == '__main__':
     main()
