@@ -2,7 +2,7 @@ import os
 import random
 import shutil
 
-def separate_datasets(datasets_directory, datasets_range, train_ratio=0.70, validation_ratio=0.15, testing_ratio=0.15):
+def separate_datasets(datasets_directory, datasets_range, train_ratio=0.65, validation_ratio=0.20, testing_ratio=0.15):
     """
     Separate files into training, validation, and testing datasets.
 

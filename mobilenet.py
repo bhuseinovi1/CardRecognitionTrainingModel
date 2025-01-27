@@ -11,9 +11,13 @@ def create_model(num_classes):
     # Custom classification head
     model = models.Sequential([
         base_model,
+        # layers.Conv2D(32, (3,3), activation='relu'),
+        # layers.MaxPooling2D((2,2)),
+        # layers.BatchNormalization(),
         layers.GlobalAveragePooling2D(),
-        layers.Dropout(0.2),
-        layers.Dense(256, activation='relu'),
+        layers.Flatten(),
+        layers.Dense(4096, activation='relu'),
+        layers.Dropout(0.5),
         layers.Dense(num_classes, activation='softmax')
     ])
     

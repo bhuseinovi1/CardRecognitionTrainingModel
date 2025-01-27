@@ -14,13 +14,13 @@ def prepare_data_generators(base_dir='./datasets',
     # Create an ImageDataGenerator for training with data augmentation
     train_datagen = ImageDataGenerator(
         rescale=1.0/255,              # Normalize pixel values to [0, 1]
-        rotation_range=20,            # Randomly rotate images by 20 degrees
-        width_shift_range=0.2,        # Randomly shift images horizontally by 20%
-        height_shift_range=0.2,       # Randomly shift images vertically by 20%
-        shear_range=0.2,              # Shear transformations
-        zoom_range=0.2,               # Zoom in/out by 20%
-        horizontal_flip=True,         # Randomly flip images horizontally
-        fill_mode='nearest'           # Fill pixels after transformations
+        # rotation_range=20,            # Randomly rotate images by 20 degrees
+        # width_shift_range=0.2,        # Randomly shift images horizontally by 20%
+        # height_shift_range=0.2,       # Randomly shift images vertically by 20%
+        # shear_range=0.2,              # Shear transformations
+        # zoom_range=0.2,               # Zoom in/out by 20%
+        # horizontal_flip=True,         # Randomly flip images horizontally
+        # fill_mode='nearest'           # Fill pixels after transformations
     )
 
     # For validation and testing, only rescale pixel values
