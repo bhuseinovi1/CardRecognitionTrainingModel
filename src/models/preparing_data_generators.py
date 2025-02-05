@@ -1,6 +1,6 @@
 from keras._tf_keras.keras.preprocessing.image import ImageDataGenerator
 
-def prepare_data_generators(base_dir='./datasets',
+def prepare_data_generators(base_dir='../datasets',
                             image_size=(224, 224),
                             training_batch_size=32, 
                             validation_batch_size=16, 
@@ -11,16 +11,10 @@ def prepare_data_generators(base_dir='./datasets',
     validation_dir = f"{base_dir}/validation"
     test_dir = f"{base_dir}/testing"
 
-    # Create an ImageDataGenerator for training with data augmentation
+    # Create an ImageDataGenerator for training without data augmentation
+    # Data augmentation has already been applied to the dataset
     train_datagen = ImageDataGenerator(
         rescale=1.0/255,              # Normalize pixel values to [0, 1]
-        # rotation_range=20,            # Randomly rotate images by 20 degrees
-        # width_shift_range=0.2,        # Randomly shift images horizontally by 20%
-        # height_shift_range=0.2,       # Randomly shift images vertically by 20%
-        # shear_range=0.2,              # Shear transformations
-        # zoom_range=0.2,               # Zoom in/out by 20%
-        # horizontal_flip=True,         # Randomly flip images horizontally
-        # fill_mode='nearest'           # Fill pixels after transformations
     )
 
     # For validation and testing, only rescale pixel values
@@ -32,7 +26,7 @@ def prepare_data_generators(base_dir='./datasets',
         train_dir,
         target_size=image_size,
         batch_size=training_batch_size,
-        class_mode='categorical',     # Assuming you have 79 classes (multiclass classification)
+        class_mode='categorical',     # Multiclass classification
         shuffle=True                  # Shuffle training data
     )
 

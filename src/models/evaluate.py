@@ -1,24 +1,7 @@
-from preparing_data_generators import prepare_data_generators
+from keras._tf_keras.keras.applications.mobilenet_v2 import MobileNetV2
 import numpy as np
-from mobilenet import create_model
 
-def main():
-    # Prepare data generators
-    train_generator, validation_generator, test_generator = prepare_data_generators()
-
-    # Calculate and print the number of classes
-    num_classes = train_generator.num_classes
-    print("Number of classes:", num_classes)
-
-    # Load MobileNetV3Small model
-    model = create_model(num_classes) # 79 classes
-    model.summary()
-
-    # Train the model
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    history = model.fit(train_generator, epochs=20, validation_data=validation_generator)
-
-    # Evaluate the model
+def evaluate_results(model, test_generator):
     loss, accuracy = model.evaluate(test_generator)    
     print(f"Test accuracy: {accuracy * 100:.2f}%")
     print(f"Test loss: {loss:.4f}")
@@ -55,6 +38,3 @@ def main():
     # Print the results
     for i, (filename, predicted, actual) in enumerate(zip(filenames, predicted_classes, actual_classes)):
         print(f"Filename: {filename}, Predicted class = {class_labels[predicted]}, Actual class = {class_labels[actual]}")
-
-if __name__ == '__main__':
-    main()
