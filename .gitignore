@@ -6,3 +6,7 @@ __pycache__/
 datasets/
 backgrounds/
 .vscode/
+temp_input/
+temp_backgrounds/
+src/models/samples/*
+!src/models/samples/

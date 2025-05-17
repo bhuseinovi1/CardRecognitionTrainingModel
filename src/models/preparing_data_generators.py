@@ -46,7 +46,4 @@ def prepare_data_generators(base_dir='../datasets',
         shuffle=False                 # Do not shuffle test data
     )
 
-    # Print the class indices to verify the class mappings
-    print("Class indices:", train_generator.class_indices)
-
     return train_generator, validation_generator, test_generator

@@ -1,12 +1,11 @@
 from models.preparing_data_generators import prepare_data_generators
 from models.mobilenet import create_model
 from models.evaluate import evaluate_results
-from visualization.plot_training_history import plot_training_history
 from visualization.plot_finetuning_progress import plot_combined_history
-from visualization.plot_learning_rate import plot_learning_rate
-from keras._tf_keras.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from keras._tf_keras.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 from keras._tf_keras.keras.optimizers import Adam
 from keras._tf_keras.keras.applications.mobilenet_v2 import MobileNetV2
+import datetime
 
 def main():
     # Prepare data generators
@@ -36,30 +35,57 @@ def main():
         min_lr=1e-6           # Minimum learning rate
     )
 
+    # Add a checkpoint for best validation loss
+    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    checkpoint = ModelCheckpoint(
+        f"./models/best_model_{timestamp}.keras",
+        monitor="val_loss",
+        save_best_only=True,
+        verbose=1
+    )
+
     # Train the model
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    history = model.fit(train_generator, epochs=15, validation_data=validation_generator, callbacks=[early_stopping, reduce_lr])
+    model.compile(
+        optimizer='adam', 
+        loss='categorical_crossentropy', 
+        metrics=['accuracy'])
+    
+    history = model.fit(
+        train_generator, 
+        epochs=10, 
+        validation_data=validation_generator, 
+        callbacks=[early_stopping, reduce_lr, checkpoint])
 
-    # # Fine-tuning: Unfreeze some layers of the base model
-    # for layer in base_model.layers[-30:]:  # Unfreeze the last 30 layers
-    #     layer.trainable = True
+    # Fine-tuning: Unfreeze some layers of the base model
+    for layer in base_model.layers[:-30]:
+        layer.trainable = False
+    for layer in base_model.layers[-30:]:  # Unfreeze the last 30 layers
+        layer.trainable = True
 
-    # # Compile the model with a lower learning rate for fine-tuning
-    # model.compile(optimizer=Adam(learning_rate=1e-4),loss='categorical_crossentropy',metrics=['accuracy'])
+    # Compile the model with a lower learning rate for fine-tuning
+    model.compile(
+        optimizer=Adam(learning_rate=1e-4),
+        loss='categorical_crossentropy',
+        metrics=['accuracy'])
 
-    # # Continue training with fine-tuning
-    # history_fine = model.fit(train_generator, validation_data=validation_generator, epochs=20, callbacks=[early_stopping, reduce_lr])
+    # Continue training with fine-tuning
+    history_fine = model.fit(
+        train_generator, 
+        validation_data=validation_generator, 
+        epochs=10, 
+        callbacks=[early_stopping, reduce_lr, checkpoint])
 
     # Call the function with your history object
-    plot_training_history(history)
-    # plot_combined_history(history, history_fine)
+    plot_combined_history(history, history_fine)
 
     # Evaluate the model
+    print("\nEvaluating on test set:")
     evaluate_results(model, test_generator)
 
     # Save the model
-    model.save("./models/card_recognition_model.keras")
-    print("Model trained and saved.")
+    model.save(f"./models/card_recognition_model_{timestamp}.keras")
+    print(f"\nFinal model trained and saved as card_recognition_model_{timestamp}.keras")
+    print(f"\nBest model trained and saved as best_card_recognition_model_{timestamp}.keras")
 
 if __name__ == '__main__':
     main()
